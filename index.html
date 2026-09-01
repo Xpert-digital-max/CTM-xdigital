@@ -3,168 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My CRM Privilege</title>
-    <!-- Tailwind CSS -->
+    <title>LINE OA Business Consultant</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- LIFF SDK -->
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <!-- SweetAlert2 สำหรับแจ้งเตือนแบบ Modern -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Prompt', sans-serif; background-color: #f8fafc; }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-        .gradient-gold { 
-            background: linear-gradient(135deg, #D4AF37 0%, #AA771C 100%); 
-        }
-        .shimmer {
-            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
-            background-size: 200% 100%;
-            animation: shimmerEffect 3s infinite;
-        }
-        @keyframes shimmerEffect {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
+        .hero-bg { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+        .line-green { color: #00B900; }
+        .bg-line-green { background-color: #00B900; }
+        .hover-bg-line-green:hover { background-color: #009900; }
     </style>
 </head>
 <body class="antialiased text-gray-800">
 
-    <!-- Loading Overlay -->
-    <div id="loader" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center transition-opacity duration-500">
-        <div class="w-12 h-12 border-4 border-gray-200 border-t-yellow-600 rounded-full animate-spin"></div>
-        <p class="mt-4 text-gray-500 text-sm tracking-wide">กำลังเตรียมสิทธิพิเศษของคุณ...</p>
-    </div>
+    <!-- Hero Section (กระตุ้น Pain Point) -->
+    <header class="hero-bg text-white pt-16 pb-20 px-6 rounded-b-[2.5rem] shadow-2xl relative overflow-hidden">
+        <div class="relative z-10 max-w-md mx-auto text-center">
+            <span class="inline-block py-1 px-3 rounded-full bg-white/20 text-xs font-semibold mb-4 backdrop-blur-sm">
+                สำหรับเจ้าของธุรกิจ
+            </span>
+            <h1 class="text-3xl font-bold leading-snug mb-4">
+                ธุรกิจคุณกำลัง <span class="text-red-400">เสียรายได้</span><br>เพราะใช้ LINE OA ไม่สุดอยู่หรือเปล่า?
+            </h1>
+            <p class="text-slate-300 text-sm mb-6">
+                ยิงแอดแพงแต่ลูกค้าไม่กลับมาซื้อซ้ำ? ตอบแชทหลุด? ข้อมูลลูกค้ากระจัดกระจาย? ถึงเวลาเปลี่ยนแชทให้เป็นระบบทำเงินอัตโนมัติ
+            </p>
+        </div>
+    </header>
 
-    <!-- Header Section -->
-    <div class="relative pb-10 bg-slate-900 rounded-b-3xl shadow-xl">
-        <div class="px-6 pt-8 pb-8 flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-                <img id="profileImage" src="https://via.placeholder.com/150" alt="Profile" class="w-16 h-16 rounded-full border-2 border-yellow-500 shadow-md hidden">
-                <div>
-                    <h2 id="displayName" class="text-white text-xl font-semibold">ผู้ใช้งาน</h2>
-                    <p class="text-yellow-400 text-xs mt-1">อัปเดตข้อมูลล่าสุดเมื่อสักครู่</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Member Tier Card -->
-        <div class="absolute -bottom-14 left-0 right-0 px-6">
-            <div class="gradient-gold rounded-2xl p-5 shadow-lg text-white relative overflow-hidden transform transition hover:scale-[1.02] duration-300">
-                <div class="absolute inset-0 shimmer"></div> <!-- Effect แสงพาดผ่านการ์ด -->
-                <div class="relative z-10 flex justify-between items-center">
-                    <div>
-                        <p class="text-xs text-yellow-100 opacity-90 mb-1">สถานะสมาชิก</p>
-                        <h3 id="userTier" class="text-xl font-bold tracking-wide">LOADING...</h3>
-                        <!-- จุดจิตวิทยา: ทำให้ลูกค้ารู้สึกว่าการมีระดับนี้คือความคุ้มค่า -->
-                        <p id="tierMessage" class="text-[10px] text-yellow-50 mt-1 bg-black/20 inline-block px-2 py-0.5 rounded-full">
-                            กำลังโหลดข้อมูลสิทธิประโยชน์...
-                        </p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-xs text-yellow-100 opacity-90 mb-1">คะแนนสะสม</p>
-                        <h3 class="text-3xl font-bold"><span id="userPoints">0</span> <span class="text-sm font-normal">pts</span></h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Form Section -->
+    <main class="max-w-md mx-auto px-6 -mt-10 relative z-20 pb-12">
+        <div class="bg-white rounded-2xl shadow-xl p-6 border border-slate-100">
+            <h2 class="text-lg font-bold text-slate-800 mb-1">จองคิวประเมินธุรกิจ <span class="line-green">ฟรี</span></h2>
+            <p class="text-xs text-slate-500 mb-6">ปรึกษาและวางกลยุทธ์โดยผู้เชี่ยวชาญด้าน LINE OA & CRM</p>
 
-    <!-- Main Content -->
-    <div class="mt-20 px-6 pb-10">
-        <div class="mb-6">
-            <div class="flex justify-between items-end mb-4">
+            <form id="consultForm" class="space-y-4">
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-800">บริการสำหรับคุณ</h3>
-                    <p class="text-xs text-gray-500 mt-1">ยกระดับประสบการณ์ด้วยสิทธิพิเศษที่คัดสรรมาเฉพาะ</p>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">ชื่อ-นามสกุล</label>
+                    <input type="text" id="name" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B900] transition text-sm" placeholder="ชื่อผู้ติดต่อ">
                 </div>
-            </div>
-            
-            <!-- Action Menus -->
-            <div class="grid grid-cols-2 gap-4">
-                <button onclick="showAlert('แคตตาล็อกรางวัล', 'ฟังก์ชันแลกของรางวัลกำลังจะเปิดให้บริการเร็วๆ นี้')" class="glass-card p-5 rounded-2xl flex flex-col items-center justify-center text-yellow-700 hover:bg-yellow-50 transition border border-yellow-100">
-                    <svg class="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg>
-                    <span class="text-sm font-semibold">แลกรับสิทธิ์</span>
+
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">ประเภทธุรกิจ</label>
+                    <input type="text" id="businessType" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B900] transition text-sm" placeholder="เช่น คลินิก, ร้านอาหาร, อสังหาฯ">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">ปัญหาหลักที่เจอตอนนี้</label>
+                    <select id="painPoint" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B900] transition text-sm bg-white">
+                        <option value="" disabled selected>เลือกปัญหาที่คุณอยากแก้ด่วนที่สุด</option>
+                        <option value="ยิงแอดแพง ลูกค้าไม่ซื้อซ้ำ">ยิงแอดแพง ลูกค้าไม่กลับมาซื้อซ้ำ</option>
+                        <option value="แอดมินตอบแชทไม่ทัน หลุดจอง">แอดมินตอบแชทไม่ทัน ออเดอร์หลุด</option>
+                        <option value="ไม่มีระบบเก็บข้อมูลลูกค้า (CRM)">ไม่มีระบบเก็บฐานข้อมูลลูกค้า (CRM)</option>
+                        <option value="เปิดบัญชีไว้แต่ใช้ฟีเจอร์ไม่เป็น">เปิดบัญชีไว้แต่ใช้ฟีเจอร์ไม่เป็น</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">เบอร์โทรศัพท์ติดต่อ</label>
+                    <input type="tel" id="phone" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B900] transition text-sm" placeholder="08X-XXX-XXXX">
+                </div>
+
+                <button type="submit" id="submitBtn" class="w-full bg-line-green hover-bg-line-green text-white font-bold py-3.5 rounded-xl shadow-lg shadow-green-500/30 transition duration-300 mt-2 flex justify-center items-center">
+                    <span>ส่งข้อมูลเพื่อรับคำปรึกษา</span>
                 </button>
-                <button onclick="showAlert('จองที่ปรึกษา', 'เข้าสู่ระบบจองคิวรับคำปรึกษาส่วนตัว')" class="glass-card p-5 rounded-2xl flex flex-col items-center justify-center text-slate-700 hover:bg-slate-50 transition border border-slate-200">
-                    <svg class="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    <span class="text-sm font-semibold">นัดหมาย</span>
-                </button>
-            </div>
+            </form>
         </div>
-    </div>
+    </main>
 
     <script>
-        // กำหนด URL ของ Google Apps Script ที่ Deploy เป็น Web App
-        const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxMUA9aLlnzjRu_EiwpPY_sy3JaDHbsHHA8wBg4_lzCCKQ5Dza89aNHGzNfi5CVN6cX/exec"; 
-        
-        async function initializeLiff() {
-            try {
-                await liff.init({ liffId: "2009249359-LtOqoG0l" }); 
-                
-                if (liff.isLoggedIn()) {
-                    const profile = await liff.getProfile();
-                    
-                    // อัปเดต UI รูปโปรไฟล์
-                    document.getElementById('profileImage').src = profile.pictureUrl;
-                    document.getElementById('profileImage').classList.remove('hidden');
-                    document.getElementById('displayName').innerText = profile.displayName;
-                    
-                    // ดึงข้อมูล CRM จากระบบหลังบ้าน (GAS)
-                    fetchCRMData(profile.userId);
-                } else {
-                    liff.login();
-                }
-            } catch (err) {
-                console.error('LIFF Error:', err);
-                Swal.fire('ข้อผิดพลาด', 'ไม่สามารถเชื่อมต่อระบบ LINE ได้', 'error');
-            }
-        }
+        // *** นำ URL ที่ได้จาก GAS มาใส่ในบรรทัดนี้ ***
+        const GAS_URL = "YOUR_GAS_WEBAPP_URL_HERE";
 
-        async function fetchCRMData(userId) {
+        document.getElementById('consultForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+            
+            // เปลี่ยนปุ่มเป็นสถานะกำลังโหลด
+            submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-3 text-white" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> กำลังส่งข้อมูล...';
+            submitBtn.disabled = true;
+
+            const formData = {
+                name: document.getElementById('name').value,
+                businessType: document.getElementById('businessType').value,
+                painPoint: document.getElementById('painPoint').value,
+                phone: document.getElementById('phone').value
+            };
+
             try {
-                const response = await fetch(GAS_WEBAPP_URL, {
+                const response = await fetch(GAS_URL, {
                     method: 'POST',
-                    body: JSON.stringify({ userId: userId }),
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' } // ป้องกันปัญหา CORS กับ GAS
+                    body: JSON.stringify(formData),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
                 });
-                
-                const result = await response.json();
-                
-                if(result.status === 'success') {
-                    // ปิด Loading
-                    document.getElementById('loader').style.opacity = '0';
-                    setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 500);
 
-                    // อัปเดตข้อมูลบนหน้าจอ
-                    document.getElementById('userTier').innerText = result.data.tier;
-                    document.getElementById('userPoints').innerText = result.data.points.toLocaleString();
-                    document.getElementById('tierMessage').innerText = result.data.tierMessage;
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'ส่งข้อมูลเรียบร้อย',
+                        text: 'ทีมงานผู้เชี่ยวชาญจะติดต่อกลับไปหาคุณโดยเร็วที่สุด',
+                        confirmButtonColor: '#00B900'
+                    }).then(() => {
+                        document.getElementById('consultForm').reset();
+                    });
+                } else {
+                    throw new Error(result.message);
                 }
             } catch (error) {
-                console.error('Fetch Error:', error);
-                Swal.fire('ข้อผิดพลาด', 'ไม่สามารถดึงข้อมูลสิทธิพิเศษได้', 'error');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
+                    confirmButtonColor: '#d33'
+                });
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
             }
-        }
-
-        function showAlert(title, text) {
-            Swal.fire({
-                title: title,
-                text: text,
-                icon: 'info',
-                confirmButtonColor: '#D4AF37',
-                confirmButtonText: 'ตกลง'
-            });
-        }
-
-        // เริ่มต้นการทำงานเมื่อโหลดหน้าเสร็จ
-        window.onload = initializeLiff;
+        });
     </script>
 </body>
 </html>
